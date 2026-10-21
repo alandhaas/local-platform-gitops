@@ -27,12 +27,22 @@ kustomizations = sorted(
     path.parent for path in ROOT.rglob("kustomization.yaml")
     if ".git" not in path.parts and ".venv" not in path.parts
 )
+kustomization_dirs = {path.resolve() for path in kustomizations}
 rendered_documents = []
 for source_dir in kustomizations:
     directory = source_dir.relative_to(ROOT).as_posix()
-    output = subprocess.check_output(
-        [args.kustomize, "build", str(source_dir)], text=True
-    )
+    try:
+        result = subprocess.run(
+            [args.kustomize, "build", str(source_dir)],
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as error:
+        raise ValueError(
+            f"Kustomize build failed for {directory}:\n{error.stderr.strip()}"
+        ) from error
+    output = result.stdout
     rendered = list(yaml.safe_load_all(output))
     rendered = [resource for resource in rendered if resource is not None]
     if not rendered:
@@ -58,6 +68,11 @@ for path, resource in [*documents, *rendered_documents]:
             source_path = ROOT / source["path"]
             if not source_path.is_dir():
                 raise ValueError(f"Missing Argo CD source path in {path}: {source['path']}")
+            if source_path.resolve() not in kustomization_dirs:
+                raise ValueError(
+                    f"Argo CD source has no recognized Kustomize entrypoint "
+                    f"in {path}: {source['path']}"
+                )
 
     if resource.get("kind") == "ImageUpdater":
         group, _, version = resource["apiVersion"].partition("/")
