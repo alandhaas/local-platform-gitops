@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: argocd
 resources:
   - https://github.com/argoproj-labs/argocd-image-updater/config/default?ref=v1.3.1
+  - apps/auth-api.yaml
 patches:
   - target:
       kind: ConfigMap

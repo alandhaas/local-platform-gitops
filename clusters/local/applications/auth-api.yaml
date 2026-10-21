@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auth-api
+  namespace: argocd
+  labels:
+    platform.example.com/image-updates: enabled
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/alandhaas/my-platform.git
+    targetRevision: main
+    path: apps/auth-api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: apps
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true

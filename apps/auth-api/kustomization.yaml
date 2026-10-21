@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: apps
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+images:
+  - name: auth-api
+    newName: ghcr.io/alandhaas/auth-api
+    newTag: main
+    digest: sha256:39b6f57d8e24e386e63d5062d71a139f72013600a9920e79dc459520fa69b955

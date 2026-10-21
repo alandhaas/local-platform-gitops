@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-image-updater
+  name: local-platform-image-updater
   namespace: argocd
 spec:
   project: default
