@@ -4,7 +4,7 @@ metadata:
   name: apps
   labels:
     environment: local
-
+---
 apiVersion: v1
 kind: Namespace
 metadata:

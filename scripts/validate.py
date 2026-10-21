@@ -54,7 +54,7 @@ for _, resource in [*documents, *rendered_documents]:
 for path, resource in [*documents, *rendered_documents]:
     if resource.get("kind") == "Application":
         source = resource.get("spec", {}).get("source", {})
-        if source.get("repoURL") == "https://github.com/alandhaas/personal-platform-gitops.git":
+        if source.get("repoURL") == "https://github.com/alandhaas/local-platform-gitops.git":
             source_path = ROOT / source["path"]
             if not source_path.is_dir():
                 raise ValueError(f"Missing Argo CD source path in {path}: {source['path']}")
