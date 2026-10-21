@@ -1,0 +1,28 @@
+name: Validate platform
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install validation dependencies
+        run: python3 -m pip install -r requirements-validation.txt
+      - name: Install pinned Kustomize
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error \
+            https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.1/kustomize_v5.8.1_linux_amd64.tar.gz \
+            -o "$RUNNER_TEMP/kustomize.tar.gz"
+          echo "029a7f0f4e1932c52a0476cf02a0fd855c0bb85694b82c338fc648dcb53a819d  $RUNNER_TEMP/kustomize.tar.gz" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/kustomize-bin"
+          tar --no-same-owner -xzf "$RUNNER_TEMP/kustomize.tar.gz" -C "$RUNNER_TEMP/kustomize-bin" kustomize
+          echo "$RUNNER_TEMP/kustomize-bin" >> "$GITHUB_PATH"
+      - name: Validate
+        run: make validate

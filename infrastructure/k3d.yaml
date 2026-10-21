@@ -1,0 +1,16 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: local-platform
+
+image: rancher/k3s:v1.35.8-k3s1
+servers: 1
+agents: 0
+
+kubeAPI:
+  hostIP: "127.0.0.1"
+
+options:
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: false

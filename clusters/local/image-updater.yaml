@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-image-updater
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/alandhaas/local-platform-gitops.git
+    targetRevision: main
+    path: platform-image-updater
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
