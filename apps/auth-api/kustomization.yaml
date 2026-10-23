@@ -4,6 +4,8 @@ namespace: apps
 resources:
   - deployment.yaml
   - service.yaml
+  - ingress.yaml
+  - middleware.yaml
 images:
   - name: auth-api
     newName: ghcr.io/alandhaas/auth-api

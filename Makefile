@@ -25,6 +25,11 @@ argocd-status:
 argocd-ui:
 	kubectl --context $(KUBE_CONTEXT) port-forward -n argocd svc/argocd-server 8080:443
 
+.PHONY: traefik-forward
+
+traefik-forward:
+	kubectl --context $(KUBE_CONTEXT) port-forward -n kube-system svc/traefik 8080:80
+
 .PHONY: argocd-bootstrap gitops-status
 
 argocd-bootstrap:
