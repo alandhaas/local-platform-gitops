@@ -18,7 +18,8 @@ spec:
         - name: migrate
           image: auth-api
           imagePullPolicy: Always
-          args: ["migrate"]
+          command: ["python"]
+          args: ["-m", "app.migrate"] #different then other apps because we want to run the migration script directly
           envFrom:
             - secretRef:
                 name: auth-api-db
