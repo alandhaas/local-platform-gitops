@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: personal-platform-api
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: apps-personal-platform-api-strip-prefix@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: local.platform.localhost
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: personal-platform-api
+                port:
+                  number: 8080
