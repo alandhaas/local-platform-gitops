@@ -10,7 +10,7 @@ spec:
     - host: local.platform.localhost
       http:
         paths:
-          - path: /auth
+          - path: /personal-platform
             pathType: Prefix
             backend:
               service:
