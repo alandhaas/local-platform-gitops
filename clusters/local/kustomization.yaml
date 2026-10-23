@@ -6,3 +6,4 @@ resources:
   - applications/image-updater.yaml
   - applications/postgres.yaml
   - applications/auth-api.yaml
+  - applications/personal-platform-api.yaml
