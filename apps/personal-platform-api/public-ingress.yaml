@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: personal-platform-api-public
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: >-
+      apps-personal-platform-api-public-rate-limit@kubernetescrd,
+      apps-personal-platform-api-strip-prefix@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: gym-tracker.tech
+      http:
+        paths:
+          - path: /personal-platform
+            pathType: Prefix
+            backend:
+              service:
+                name: personal-platform-api
+                port:
+                  number: 8080

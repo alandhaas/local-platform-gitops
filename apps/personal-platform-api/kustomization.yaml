@@ -7,6 +7,8 @@ resources:
   - service.yaml
   - ingress.yaml
   - middleware.yaml
+  - public-rate-limit.yaml
+  - public-ingress.yaml
 images:
   - name: personal-platform-api
     newName: ghcr.io/alandhaas/personal-platform-api
