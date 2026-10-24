@@ -13,4 +13,4 @@ images:
   - name: personal-platform-api
     newName: ghcr.io/alandhaas/personal-platform-api
     newTag: main
-    digest: sha256:0e626964c4521dc802b0a28ac5d4e96081f99d0482fd3bf0e02456205a076be1
+    digest: sha256:1ee1923414c4168b06d0ab03cab88f8b250bdf545dd963a9d7a688ce1b996d2a
