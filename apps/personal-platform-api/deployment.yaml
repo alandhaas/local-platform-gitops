@@ -23,6 +23,8 @@ spec:
                 name: personal-platform-api-db
             - secretRef:
                 name: auth-api-secrets
+            - configMapRef:
+                name: client-url
           env:
             - name: PORT
               value: "8080"
