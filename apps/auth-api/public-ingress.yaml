@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-api-public-sensitive
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.priority: "200"
+    traefik.ingress.kubernetes.io/router.middlewares: apps-auth-public-sensitive-limit@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: gym-tracker.tech
+      http:
+        paths:
+          - path: /auth/login
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-api
+                port:
+                  number: 8000
+          - path: /auth/register
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-api
+                port:
+                  number: 8000
+          - path: /auth/refresh
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-api
+                port:
+                  number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-api-public
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.priority: "100"
+    traefik.ingress.kubernetes.io/router.middlewares: apps-auth-public-general-limit@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: gym-tracker.tech
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-api
+                port:
+                  number: 8000
