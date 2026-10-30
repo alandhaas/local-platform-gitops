@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nutrition-api
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: apps-nutrition-api-strip-prefix@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: local.platform.localhost
+      http:
+        paths:
+          - path: /nutrition
+            pathType: Prefix
+            backend:
+              service:
+                name: nutrition-api
+                port:
+                  number: 8000

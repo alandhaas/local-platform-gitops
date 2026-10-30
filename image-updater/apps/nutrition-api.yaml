@@ -1,0 +1,27 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: nutrition-api
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: git:secret:platform-git-write
+    gitConfig:
+      repository: git@github.com:alandhaas/local-platform-gitops.git
+      branch: main
+      writeBackTarget: kustomization
+  applicationRefs:
+    - namePattern: nutrition-api
+      labelSelectors:
+        matchLabels:
+          platform.example.com/image-updates: enabled
+      images:
+        - alias: api
+          imageName: ghcr.io/alandhaas/nutrition-api:main
+          commonUpdateSettings:
+            updateStrategy: digest
+            forceUpdate: true
+            pullSecret: pullsecret:argocd/ghcr-read
+          manifestTargets:
+            kustomize:
+              name: nutrition-api
