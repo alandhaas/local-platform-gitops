@@ -12,3 +12,4 @@ images:
   - name: nutrition-api
     newName: ghcr.io/alandhaas/nutrition-api
     newTag: main
+    digest: sha256:d003cb84a54911c466f89b5c7f756b9fd46ed73cf782061ac40b4cc43ab0e605
