@@ -21,6 +21,8 @@ spec:
           envFrom:
             - secretRef:
                 name: nutrition-api-secrets
+            - secretRef:
+                name: auth-api-secrets
             - configMapRef:
                 name: client-url
           env:
@@ -33,13 +35,13 @@ spec:
             httpGet:
               path: /health
               port: http
-            periodSeconds: 5
+            periodSeconds: 30
             failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /health
               port: http
-            periodSeconds: 5
+            periodSeconds: 30
           resources:
             requests:
               cpu: 100m
