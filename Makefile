@@ -25,12 +25,16 @@ argocd-status:
 argocd-ui:
 	kubectl --context $(KUBE_CONTEXT) port-forward -n argocd svc/argocd-server 8080:443
 
-.PHONY: traefik-forward
+.PHONY: traefik-forward grafana-forward
 
 traefik-forward:
 	kubectl --context $(KUBE_CONTEXT) port-forward -n kube-system svc/traefik 8080:80
 
-.PHONY: argocd-bootstrap gitops-status
+grafana-forward:
+	kubectl --context $(KUBE_CONTEXT) port-forward -n observability \
+		svc/prometheus-stack-grafana 3000:80
+
+.PHONY: argocd-bootstrap gitops-status observability-status
 
 argocd-bootstrap:
 	kubectl --context $(KUBE_CONTEXT) apply -f bootstrap/argocd/root-app.yaml
@@ -38,6 +42,11 @@ argocd-bootstrap:
 gitops-status:
 	kubectl --context $(KUBE_CONTEXT) get applications -n argocd
 	kubectl --context $(KUBE_CONTEXT) get namespace apps
+
+observability-status:
+	kubectl --context $(KUBE_CONTEXT) -n argocd get applications \
+		prometheus-stack loki alloy observability-dashboards
+	kubectl --context $(KUBE_CONTEXT) -n observability get pods,pvc
 
 .PHONY: validate
 validate:

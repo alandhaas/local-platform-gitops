@@ -7,6 +7,17 @@ Git.
 
 ## Local access
 
+Open the Argo CD UI with:
+
+```bash
+make argocd-ui
+```
+
+While it is running, open <https://localhost:8080>. Sign in as `admin`; the
+initial password command and certificate warning are described in
+[Manual setup](docs/manual-setup.md#22-argo-cd-ui). Argo CD and the Traefik
+port-forward both use local port `8080`, so they cannot run at the same time.
+
 To access the auth API locally through Traefik, start the port-forward:
 
 ```bash
@@ -17,6 +28,15 @@ While it is running, access the auth API at
 <http://local.platform.localhost:8080/auth/>. Traefik strips the `/auth`
 prefix before forwarding requests to the API. Keep the terminal running and
 press Ctrl-C to stop the port-forward.
+
+Grafana is available through a separate port-forward:
+
+```bash
+make grafana-forward
+```
+
+While it is running, open <http://localhost:3000>. See the observability
+documentation for the required local administrator secret.
 
 ## Documentation
 
@@ -29,3 +49,5 @@ press Ctrl-C to stop the port-forward.
 - [Traefik](docs/traefik.md) describes local and public application routing.
 - [Cloudflare Tunnel](docs/cloudflare.md) describes how the local platform is
   exposed publicly.
+- [Observability](docs/observability.md) describes Prometheus, Grafana, Loki,
+  Alloy, dashboards, storage and local access.

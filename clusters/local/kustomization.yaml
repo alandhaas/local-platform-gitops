@@ -3,9 +3,14 @@ kind: Kustomization
 resources:
   - namespaces/apps.yaml
   - namespaces/databases.yml
+  - namespaces/observability.yaml
   - applications/image-updater.yaml
   - applications/postgres.yaml
   - applications/auth-api.yaml
   - applications/personal-platform-api.yaml
   - applications/nutrition-api.yaml
   - applications/platform-cloudflare.yaml
+  - applications/prometheus-stack.yaml
+  - applications/loki.yaml
+  - applications/alloy.yaml
+  - applications/observability-dashboards.yaml

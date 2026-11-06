@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: observability-dashboards
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/alandhaas/local-platform-gitops.git
+    targetRevision: main
+    path: observability/dashboards
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

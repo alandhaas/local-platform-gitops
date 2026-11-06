@@ -1,0 +1,68 @@
+alertmanager:
+  enabled: false
+
+grafana:
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  persistence:
+    enabled: true
+    type: sts
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  sidecar:
+    dashboards:
+      searchNamespace: observability
+  additionalDataSources:
+    - name: Loki
+      uid: loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway.observability.svc.cluster.local
+      editable: false
+      jsonData:
+        maxLines: 1000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    retentionSize: 8GB
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+
+# K3s embeds these control-plane components instead of exposing the endpoints
+# expected by kube-prometheus-stack.
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeScheduler:
+  enabled: false
