@@ -13,4 +13,4 @@ images:
   - name: fragrance-rank-api
     newName: ghcr.io/alandhaas/fragrance-rank-api
     newTag: main
-    digest: sha256:eea9fd8ea8f154c4568459f1a360a02800f00de3c97d6380f60597aec3697058
+    digest: sha256:bd16744ebf601c883d4f0a5bc4c1b824076eea97fa9263788129bb54779b0b75
