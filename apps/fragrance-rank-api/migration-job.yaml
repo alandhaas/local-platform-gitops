@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fragrance-rank-api-migrate
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 300
+  template:
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: fragrance-rank-api
+          imagePullPolicy: Always
+          command: ["node", "server/migrate.mjs"]
+          envFrom:
+            - secretRef:
+                name: fragrance-rank-api-db
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 512Mi

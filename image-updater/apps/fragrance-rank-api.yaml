@@ -1,0 +1,27 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: fragrance-rank-api
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: git:secret:platform-git-write
+    gitConfig:
+      repository: git@github.com:alandhaas/local-platform-gitops.git
+      branch: main
+      writeBackTarget: kustomization
+  applicationRefs:
+    - namePattern: fragrance-rank-api
+      labelSelectors:
+        matchLabels:
+          platform.example.com/image-updates: enabled
+      images:
+        - alias: api
+          imageName: ghcr.io/alandhaas/fragrance-rank-api:main
+          commonUpdateSettings:
+            updateStrategy: digest
+            forceUpdate: true
+            pullSecret: pullsecret:argocd/ghcr-read
+          manifestTargets:
+            kustomize:
+              name: fragrance-rank-api

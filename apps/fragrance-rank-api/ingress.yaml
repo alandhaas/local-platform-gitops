@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fragrance-rank-api
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: apps-fragrance-rank-api-strip-prefix@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: local.platform.localhost
+      http:
+        paths:
+          - path: /fragrances
+            pathType: Prefix
+            backend:
+              service:
+                name: fragrance-rank-api
+                port:
+                  number: 3000
