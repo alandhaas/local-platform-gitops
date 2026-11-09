@@ -9,6 +9,7 @@ resources:
   - applications/auth-api.yaml
   - applications/personal-platform-api.yaml
   - applications/nutrition-api.yaml
+  - applications/fragrance-rank-api.yaml
   - applications/platform-cloudflare.yaml
   - applications/prometheus-stack.yaml
   - applications/loki.yaml

@@ -1,0 +1,11 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: fragrance-rank-api-public-rate-limit
+spec:
+  rateLimit:
+    average: 20
+    period: 1s
+    burst: 40
+    sourceCriterion:
+      requestHeaderName: CF-Connecting-IP
