@@ -13,4 +13,4 @@ images:
   - name: auth-api
     newName: ghcr.io/alandhaas/auth-api
     newTag: main
-    digest: sha256:9afd72dea8b436fd7563812661dd8f3660e0d673d16ab157bb0bbd0a7f48092b
+    digest: sha256:d2bc66dbdcbe1e695ac8614fe6d74a5bada4e8b46fabcb1d3a1890697d1704eb
