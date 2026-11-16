@@ -9,7 +9,7 @@ spec:
     gitConfig:
       repository: git@github.com:alandhaas/local-platform-gitops.git
       branch: main
-      writeBackTarget: kustomization
+      writeBackTarget: helmvalues:apps/nutrition-api/values.yaml
   applicationRefs:
     - namePattern: nutrition-api
       labelSelectors:
@@ -23,5 +23,6 @@ spec:
             forceUpdate: true
             pullSecret: pullsecret:argocd/ghcr-read
           manifestTargets:
-            kustomize:
-              name: nutrition-api
+            helm:
+              name: image.repository
+              tag: image.tag

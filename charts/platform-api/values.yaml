@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+envFrom:
+  secretRefs: []
+  configMapRefs: []
+
+service:
+  port: 8000
+
+probes:
+  path: /health
+  periodSeconds: 30
+  startupFailureThreshold: 30
+
+ingress:
+  className: traefik
+  path: /
+  pathType: Prefix
+  internal:
+    enabled: false
+    host: ""
+  public:
+    enabled: false
+    host: ""
+    entryPoints: web
+
+rateLimit:
+  enabled: false
+  average: 20
+  period: 1s
+  burst: 40
+  sourceHeader: CF-Connecting-IP
+
+resources: {}

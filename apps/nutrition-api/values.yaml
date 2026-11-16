@@ -1,0 +1,52 @@
+fullnameOverride: nutrition-api
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/alandhaas/nutrition-api
+  tag: main@sha256:b87989dc88bdcb6081b47e7eb278270dd6ed287087cac72a652e6b2040a947bd
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: ghcr-pull
+
+envFrom:
+  secretRefs:
+    - nutrition-api-secrets
+    - auth-api-secrets
+  configMapRefs:
+    - client-url
+
+service:
+  port: 8000
+
+probes:
+  path: /health
+  periodSeconds: 30
+  startupFailureThreshold: 30
+
+ingress:
+  className: traefik
+  path: /nutrition
+  pathType: Prefix
+  internal:
+    enabled: true
+    host: local.platform.localhost
+  public:
+    enabled: true
+    host: gym-tracker.tech
+    entryPoints: web
+
+rateLimit:
+  enabled: true
+  average: 20
+  period: 1s
+  burst: 40
+  sourceHeader: CF-Connecting-IP
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 512Mi

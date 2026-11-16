@@ -1,0 +1,5 @@
+apiVersion: v2
+name: platform-api
+description: Standard deployment chart for platform HTTP APIs
+type: application
+version: 0.1.0

@@ -7,10 +7,17 @@ metadata:
     platform.example.com/image-updates: enabled
 spec:
   project: default
-  source:
-    repoURL: https://github.com/alandhaas/local-platform-gitops.git
-    targetRevision: main
-    path: apps/nutrition-api
+  sources:
+    - repoURL: https://github.com/alandhaas/local-platform-gitops.git
+      targetRevision: main
+      path: charts/platform-api
+      helm:
+        releaseName: nutrition-api
+        valueFiles:
+          - $values/apps/nutrition-api/values.yaml
+    - repoURL: https://github.com/alandhaas/local-platform-gitops.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: apps

@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "platform-api.stripPrefixMiddlewareName" . }}
+  labels:
+    {{- include "platform-api.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.ingress.path }}
+{{- if .Values.rateLimit.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "platform-api.rateLimitMiddlewareName" . }}
+  labels:
+    {{- include "platform-api.labels" . | nindent 4 }}
+spec:
+  rateLimit:
+    average: {{ .Values.rateLimit.average }}
+    period: {{ .Values.rateLimit.period }}
+    burst: {{ .Values.rateLimit.burst }}
+    sourceCriterion:
+      requestHeaderName: {{ .Values.rateLimit.sourceHeader }}
+{{- end }}
