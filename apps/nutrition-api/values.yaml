@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/alandhaas/nutrition-api
-  tag: main@sha256:b87989dc88bdcb6081b47e7eb278270dd6ed287087cac72a652e6b2040a947bd
+  tag: main@sha256:77a77b88fbdb46095877edc7eafb8f8d355d7570301aea01e9b9a4a0446c1f07
   pullPolicy: Always
 
 imagePullSecrets:

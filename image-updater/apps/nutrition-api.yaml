@@ -9,7 +9,7 @@ spec:
     gitConfig:
       repository: git@github.com:alandhaas/local-platform-gitops.git
       branch: main
-      writeBackTarget: helmvalues:apps/nutrition-api/values.yaml
+      writeBackTarget: helmvalues:/apps/nutrition-api/values.yaml
   applicationRefs:
     - namePattern: nutrition-api
       labelSelectors:
