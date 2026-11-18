@@ -15,10 +15,12 @@ Every backend application needs the following parts:
 - an Argo CD Application;
 - an Image Updater resource.
 
-The current resources are stored under `apps/<app-name>` and combined with
-Kustomize. The repeated resources can later become Helm templates, with the
-application-specific settings stored as chart values. The required Kubernetes
-resources and application configuration remain the same.
+Most application resources are stored under `apps/<app-name>` and combined
+with Kustomize. `nutrition-api` has been migrated to the shared
+`charts/platform-api` Helm chart, with its application-specific settings in
+`apps/nutrition-api/values.yaml`. The required Kubernetes resources and
+application configuration remain the same. See [Helm migration](helm.md) for
+the file flow and migration checklist.
 
 The Deployment pulls from GHCR using `ghcr-pull`. It loads its database and
 shared configuration through `envFrom`, and uses startup and readiness probes
@@ -46,9 +48,9 @@ Image Updater watches the application's `main` tag in GHCR. When the digest
 changes, it commits the new digest to this repository. Argo CD then deploys
 that exact image.
 
-At the moment, Image Updater writes the digest into the application's
-`kustomization.yaml`. When the applications move to Helm, its write-back target
-must be changed to the Helm values used for the image tag or digest.
+For Kustomize applications, Image Updater writes the digest into the
+application's `kustomization.yaml`. For Helm applications, it writes the image
+repository and digest into the application's values file instead.
 
 ## 3. Application database
 
