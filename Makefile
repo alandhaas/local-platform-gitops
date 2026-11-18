@@ -1,5 +1,4 @@
 KUBE_CONTEXT ?= k3d-local-platform
-KUSTOMIZE ?= kustomize
 PYTHON ?= python3
 
 .PHONY: cluster-up cluster-status
@@ -50,4 +49,4 @@ observability-status:
 
 .PHONY: validate
 validate:
-	$(PYTHON) scripts/validate.py --kustomize $(KUSTOMIZE)
+	$(PYTHON) scripts/validate.py
