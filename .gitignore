@@ -13,6 +13,9 @@ Thumbs.db
 *.swp
 
 .venv/
+.ansible-venv/
+.ansible/
+.python/
 __pycache__/
 steps.md
 learnings.md

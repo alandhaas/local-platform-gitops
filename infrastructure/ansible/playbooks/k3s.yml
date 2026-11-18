@@ -1,0 +1,120 @@
+---
+- name: Prepare all K3s nodes
+  hosts: k3s_cluster
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Wait for cloud-init to finish
+      ansible.builtin.command: cloud-init status --wait
+      changed_when: false
+
+    - name: Download the K3s installer
+      ansible.builtin.get_url:
+        url: "{{ k3s_install_script_url }}"
+        dest: /usr/local/src/install-k3s.sh
+        owner: root
+        group: root
+        mode: "0755"
+
+- name: Install the K3s server
+  hosts: k3s_server
+  become: true
+  tasks:
+    - name: Install the pinned K3s server
+      ansible.builtin.command: /usr/local/src/install-k3s.sh
+      environment:
+        INSTALL_K3S_VERSION: "{{ k3s_version }}"
+        INSTALL_K3S_EXEC: "server --tls-san {{ ansible_host }}"
+      args:
+        creates: /etc/systemd/system/k3s.service
+
+    - name: Wait for the Kubernetes API
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: "{{ k3s_api_port }}"
+        timeout: 180
+      become: false
+      delegate_to: localhost
+
+    - name: Read the agent join token
+      ansible.builtin.slurp:
+        src: /var/lib/rancher/k3s/server/agent-token
+      register: agent_token_file
+      no_log: true
+
+    - name: Keep the join token in memory for the agent play
+      ansible.builtin.set_fact:
+        k3s_agent_token: "{{ agent_token_file.content | b64decode | trim }}"
+      no_log: true
+
+- name: Join the K3s agents
+  hosts: k3s_agents
+  become: true
+  vars:
+    k3s_server_host: "{{ groups['k3s_server'] | first }}"
+  tasks:
+    - name: Install and join the pinned K3s agent
+      ansible.builtin.command: /usr/local/src/install-k3s.sh
+      environment:
+        INSTALL_K3S_VERSION: "{{ k3s_version }}"
+        K3S_URL: "https://{{ hostvars[k3s_server_host].ansible_host }}:{{ k3s_api_port }}"
+        K3S_TOKEN: "{{ hostvars[k3s_server_host].k3s_agent_token }}"
+      args:
+        creates: /etc/systemd/system/k3s-agent.service
+      no_log: true
+
+    - name: Wait for the K3s agent service
+      ansible.builtin.systemd_service:
+        name: k3s-agent
+        state: started
+        enabled: true
+
+- name: Export kubeconfig and verify the cluster
+  hosts: k3s_server
+  become: true
+  tasks:
+    - name: Wait for every configured node to become Ready
+      ansible.builtin.command:
+        argv:
+          - k3s
+          - kubectl
+          - wait
+          - --for=condition=Ready
+          - nodes
+          - --all
+          - --timeout=180s
+      changed_when: false
+
+    - name: Read the administrator kubeconfig
+      ansible.builtin.slurp:
+        src: /etc/rancher/k3s/k3s.yaml
+      register: kubeconfig_file
+      no_log: true
+
+    - name: Ensure the local kubeconfig directory exists
+      ansible.builtin.file:
+        path: "{{ local_kubeconfig_path | dirname }}"
+        state: directory
+        mode: "0700"
+      become: false
+      delegate_to: localhost
+
+    - name: Write the local kubeconfig with the server IP
+      ansible.builtin.copy:
+        content: >-
+          {{ kubeconfig_file.content | b64decode |
+             regex_replace('https://127.0.0.1:', 'https://' ~ ansible_host ~ ':') }}
+        dest: "{{ local_kubeconfig_path }}"
+        mode: "0600"
+      become: false
+      delegate_to: localhost
+      no_log: true
+
+    - name: Show cluster nodes
+      ansible.builtin.command: k3s kubectl get nodes -o wide
+      register: cluster_nodes
+      changed_when: false
+
+    - name: Display cluster nodes
+      ansible.builtin.debug:
+        var: cluster_nodes.stdout_lines

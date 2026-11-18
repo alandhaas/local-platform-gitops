@@ -1,6 +1,10 @@
 KUBE_CONTEXT ?= k3d-local-platform
 PYTHON ?= python3
 TERRAFORM_DIR ?= infrastructure/terraform/multipass
+ANSIBLE_DIR ?= infrastructure/ansible
+ANSIBLE_INVENTORY ?= ansible-inventory
+ANSIBLE_PLAYBOOK ?= ansible-playbook
+ANSIBLE_HOME ?= $(CURDIR)/.ansible
 
 .PHONY: cluster-up cluster-status
 
@@ -65,3 +69,20 @@ terraform-validate:
 
 terraform-plan:
 	terraform -chdir=$(TERRAFORM_DIR) plan
+
+.PHONY: ansible-check ansible-inventory ansible-k3s ansible-argocd
+
+ansible-check:
+	ANSIBLE_HOME=$(ANSIBLE_HOME) ansible --version
+
+ansible-inventory:
+	cd $(ANSIBLE_DIR) && ANSIBLE_HOME=$(ANSIBLE_HOME) \
+		$(ANSIBLE_INVENTORY) --graph
+
+ansible-k3s:
+	cd $(ANSIBLE_DIR) && ANSIBLE_HOME=$(ANSIBLE_HOME) \
+		$(ANSIBLE_PLAYBOOK) playbooks/k3s.yml
+
+ansible-argocd:
+	cd $(ANSIBLE_DIR) && ANSIBLE_HOME=$(ANSIBLE_HOME) \
+		$(ANSIBLE_PLAYBOOK) playbooks/argocd.yml

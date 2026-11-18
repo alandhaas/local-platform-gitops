@@ -42,6 +42,8 @@ documentation for the required local administrator secret.
 
 - [Terraform and Multipass](infrastructure/terraform/multipass/README.md)
   describes the multi-node VM infrastructure and its learning workflow.
+- [Ansible bootstrap](infrastructure/ansible/README.md) installs K3s, joins its
+  worker nodes and bootstraps Argo CD.
 - [Manual setup](docs/manual-setup.md) describes the local steps and credentials
   which are not stored in Git.
 - [PostgreSQL](docs/postgres.md) describes the database deployment and its

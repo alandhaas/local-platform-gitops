@@ -7,9 +7,10 @@ resource "local_file" "cloud_init" {
 
   filename = "${path.module}/cloud-init/rendered-${each.key}.yaml"
   content = templatefile("${path.module}/cloud-init/node.yaml.tftpl", {
-    node_name = each.key
-    node_role = each.value.role
-    tags      = join(",", local.common_tags)
+    ansible_public_key = trimspace(file(pathexpand(var.ansible_public_key_path)))
+    node_name          = each.key
+    node_role          = each.value.role
+    tags               = join(",", local.common_tags)
   })
 
   file_permission = "0644"

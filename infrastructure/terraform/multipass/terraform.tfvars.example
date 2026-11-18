@@ -1,5 +1,6 @@
 # Copy this file to terraform.tfvars only when you want to override the defaults.
 ubuntu_image = "24.04"
+ansible_public_key_path = "~/.ssh/id_ed25519.pub"
 
 nodes = {
   k3s-server-1 = {

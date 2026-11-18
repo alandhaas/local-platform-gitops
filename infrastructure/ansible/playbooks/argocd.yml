@@ -1,0 +1,54 @@
+---
+- name: Bootstrap Argo CD into K3s
+  hosts: k3s_server
+  become: true
+  tasks:
+    - name: Download the pinned Argo CD installation manifest
+      ansible.builtin.get_url:
+        url: "{{ argocd_install_url }}"
+        dest: "/usr/local/src/argocd-install-{{ argocd_version }}.yaml"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Create the Argo CD namespace declaratively
+      ansible.builtin.shell:
+        cmd: >-
+          k3s kubectl create namespace argocd --dry-run=client -o yaml |
+          k3s kubectl apply -f -
+      register: namespace_apply
+      changed_when: "'created' in namespace_apply.stdout or 'configured' in namespace_apply.stdout"
+
+    - name: Apply the Argo CD manifests
+      ansible.builtin.command:
+        argv:
+          - k3s
+          - kubectl
+          - apply
+          - --server-side
+          - --namespace=argocd
+          - "--filename=/usr/local/src/argocd-install-{{ argocd_version }}.yaml"
+      register: argocd_apply
+      changed_when: "'created' in argocd_apply.stdout or 'configured' in argocd_apply.stdout"
+
+    - name: Wait for the Argo CD server
+      ansible.builtin.command:
+        argv:
+          - k3s
+          - kubectl
+          - rollout
+          - status
+          - deployment/argocd-server
+          - --namespace=argocd
+          - --timeout=300s
+      changed_when: false
+
+    - name: Show the Argo CD deployment
+      ansible.builtin.command: >-
+        k3s kubectl get deployment argocd-server --namespace=argocd
+      register: argocd_deployment
+      changed_when: false
+
+    - name: Display the Argo CD deployment
+      ansible.builtin.debug:
+        var: argocd_deployment.stdout_lines

@@ -1,0 +1,7 @@
+---
+k3s_version: v1.36.6+k3s1
+k3s_install_script_url: https://get.k3s.io
+k3s_api_port: 6443
+local_kubeconfig_path: "{{ lookup('env', 'HOME') }}/.kube/k3s-multipass.yaml"
+argocd_version: v3.5.3
+argocd_install_url: "https://raw.githubusercontent.com/argoproj/argo-cd/{{ argocd_version }}/manifests/install.yaml"

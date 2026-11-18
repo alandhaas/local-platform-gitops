@@ -4,6 +4,12 @@ variable "ubuntu_image" {
   default     = "24.04"
 }
 
+variable "ansible_public_key_path" {
+  description = "Public SSH key authorized for Ansible on every node."
+  type        = string
+  default     = "~/.ssh/id_ed25519.pub"
+}
+
 variable "nodes" {
   description = "Multipass machines that will form the K3s cluster."
   type = map(object({
