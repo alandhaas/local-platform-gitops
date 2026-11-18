@@ -1,0 +1,23 @@
+# Copy this file to terraform.tfvars only when you want to override the defaults.
+ubuntu_image = "24.04"
+
+nodes = {
+  k3s-server-1 = {
+    role   = "server"
+    cpus   = 2
+    memory = "4GiB"
+    disk   = "20GiB"
+  }
+  k3s-worker-1 = {
+    role   = "agent"
+    cpus   = 2
+    memory = "2GiB"
+    disk   = "15GiB"
+  }
+  k3s-worker-2 = {
+    role   = "agent"
+    cpus   = 2
+    memory = "2GiB"
+    disk   = "15GiB"
+  }
+}

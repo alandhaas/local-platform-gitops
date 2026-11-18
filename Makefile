@@ -1,5 +1,6 @@
 KUBE_CONTEXT ?= k3d-local-platform
 PYTHON ?= python3
+TERRAFORM_DIR ?= infrastructure/terraform/multipass
 
 .PHONY: cluster-up cluster-status
 
@@ -50,3 +51,17 @@ observability-status:
 .PHONY: validate
 validate:
 	$(PYTHON) scripts/validate.py
+
+.PHONY: terraform-init terraform-format terraform-validate terraform-plan
+
+terraform-init:
+	terraform -chdir=$(TERRAFORM_DIR) init
+
+terraform-format:
+	terraform -chdir=$(TERRAFORM_DIR) fmt -recursive
+
+terraform-validate:
+	terraform -chdir=$(TERRAFORM_DIR) validate
+
+terraform-plan:
+	terraform -chdir=$(TERRAFORM_DIR) plan

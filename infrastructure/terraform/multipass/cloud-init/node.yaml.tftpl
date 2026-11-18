@@ -1,0 +1,20 @@
+#cloud-config
+hostname: ${node_name}
+manage_etc_hosts: true
+package_update: true
+
+packages:
+  - curl
+  - jq
+
+write_files:
+  - path: /etc/local-platform-node
+    owner: root:root
+    permissions: "0644"
+    content: |
+      name=${node_name}
+      role=${node_role}
+      tags=${tags}
+
+runcmd:
+  - [cloud-init-per, once, local-platform-ready, touch, /var/lib/local-platform-ready]

@@ -40,12 +40,16 @@ documentation for the required local administrator secret.
 
 ## Documentation
 
+- [Terraform and Multipass](infrastructure/terraform/multipass/README.md)
+  describes the multi-node VM infrastructure and its learning workflow.
 - [Manual setup](docs/manual-setup.md) describes the local steps and credentials
   which are not stored in Git.
 - [PostgreSQL](docs/postgres.md) describes the database deployment and its
   administrator secret.
 - [Applications](docs/app.md) describes the shared deployment pattern and the
   steps to follow when adding another service.
+- [Helm migration](docs/helm.md) explains the shared API chart, how an
+  application moves from Kustomize and how Image Updater changes with it.
 - [Traefik](docs/traefik.md) describes local and public application routing.
 - [Cloudflare Tunnel](docs/cloudflare.md) describes how the local platform is
   exposed publicly.

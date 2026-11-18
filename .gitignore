@@ -16,3 +16,12 @@ Thumbs.db
 __pycache__/
 steps.md
 learnings.md
+
+# Terraform local state and generated files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+infrastructure/terraform/multipass/cloud-init/rendered-*.yaml
